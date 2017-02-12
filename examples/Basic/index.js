@@ -15,6 +15,7 @@ import {
   View,
   Dimensions,
   Platform,
+  TextInput,
 } from 'react-native';
 import SortableList from 'react-native-sortable-list';
 
@@ -77,8 +78,8 @@ class Basic extends Component {
     );
   }
 
-  _renderRow = ({data, active}) => {
-    return <Row data={data} active={active} />
+  _renderRow = ({data, active, key}) => {
+    return <Row rowId={key} data={data} active={active} />
   }
 }
 
@@ -107,6 +108,10 @@ class Row extends Component {
           outputRange: ['#fff', '#e9e9e9'],
         }),
       };
+
+      this.state = {
+        text: props.data.text,
+      }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -120,15 +125,16 @@ class Row extends Component {
   }
 
   render() {
-   const {data, active} = this.props;
+   const {active} = this.props;
 
     return (
       <Animated.View style={[
         styles.row,
         this._style,
       ]}>
-        <Image source={{uri: data.image}} style={styles.image} />
-        <Text style={styles.text}>{data.text}</Text>
+        <Image source={{uri: this.props.data.image}} style={styles.image} />
+        <TextInput keyboardType="email-address" style={styles.text} editable={true} value={this.state.text}
+          onChangeText={text => this.setState({text})} />
       </Animated.View>
     );
   }
@@ -199,6 +205,8 @@ const styles = StyleSheet.create({
 
   text: {
     fontSize: 24,
+    height:30,
+    width: 100,
   },
 });
 
